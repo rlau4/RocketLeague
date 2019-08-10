@@ -2,14 +2,14 @@ import React from "react";
 import "./Page.css";
 import Header from "../Header";
 import TradeCard from "../TradeCard";
-import PostTradeForm from "../PostTradeForm";
+import BasicForm from "../PostTradeForm";
 
 
 const Page = props => (
     <div>
         <Header/>
         <TradeCard/>
-        <PostTradeForm/>
+        <BasicForm/>
     </div>
 );
 
