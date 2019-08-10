@@ -29,7 +29,7 @@ export default class Facebook extends Component {
             fbConent= (
                 <div>
                     <img src= {this.state.picture} alt={this.state.name}/>
-                    <text>Signed In as {this.state.name}</text>
+                    <p>Signed In as {this.state.name}</p>
                 </div>
             );
         } else {

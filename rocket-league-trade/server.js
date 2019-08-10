@@ -1,6 +1,8 @@
 var express = require("express");
+const path = require('path');
 var logger = require("morgan");
 var mongoose = require("mongoose");
+const router = require('express').Router();
 
 
 var PORT = 3000;
@@ -20,55 +22,13 @@ const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/RocketLeague
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 // Routes
+const TradesRouter = require('./routes/trades');
 
-app.get("/trades", function(req, res) {
- 
-  db.Trade.find({})
-    .then(function(dbTrade) {
-      // If all Notes are successfully found, send them back to the client
-      res.json(dbTrade);
-    })
-    .catch(function(err) {
-      // If an error occurs, send the error back to the client
-      res.json(err);
-    });
+router.use((req, res) => {
+  res.sendFile(path.join(__dirname, '/client/build/index.html'));
 });
 
-// Route for saving a new Note to the db and associating it with a User
-app.post("/submit", function(req, res) {
-  // Create a new Note in the db
-  db.Trade.create(req.body)
-    .then(function(dbTrade) {
-      // If a Note was created successfully, find one User (there's only one) and push the new Note's _id to the User's `notes` array
-      // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
-      // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-      return db.Trade.findOneAndUpdate({}, { $push: { trades: dbTrade._id } }, { new: true });
-    })
-    .then(function(dbTrade) {
-      // If the User was updated successfully, send it back to the client
-      res.json(dbTrade);
-    })
-    .catch(function(err) {
-      // If an error occurs, send it back to the client
-      res.json(err);
-    });
-});
-
-// Route to get all User's and populate them with their notes
-app.get("/populatedtrade", function(req, res) {
-  // Find all users
-  db.Trade.find({})
-    // Specify that we want to populate the retrieved users with any associated notes
-    .populate("trades")
-    .then(function(dbTrade) {
-      // If able to successfully find and associate all Users and Notes, send them back to the client
-      res.json(dbTrade);
-    })
-    .catch(function(err) {
-      // If an error occurs, send it back to the client
-      res.json(err);
-    });
-});
+app.use("/trades", TradesRouter)
 
 // Start the server
 app.listen(PORT, function() {

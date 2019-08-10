@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { withFormik } from "formik";
+import axios from "axios";
 import * as Yup from "yup";
 import "./PostTradeForm.css";
 
+const root = "https://blooming-basin-10284.herokuapp.com";
 const PostTradeForm = withFormik({
   mapPropsToValues: () => ({ haveItem: "", haveColor: '', haveCert: '', wantItem: '', wantColor: '', wantCert: '', }),
   validationSchema: Yup.object().shape({
@@ -10,36 +12,17 @@ const PostTradeForm = withFormik({
     wantItem: Yup.string().required("You must list the item you want!")
   }),
   handleSubmit: (values) => {
-    const data = { haveItem: values.haveItem, haveColor: values.haveColor, haveCert: values.haveCert, wantItem: values.wantItem, wantColor: values.wantColor, wantCert: values.wantCert }
-    const haveItemDom = document.createElement("div");
-    const haveItemText = document.createTextNode(data.haveItem);
-    haveItemDom.appendChild(haveItemText);
-    document.getElementById("haveItem").appendChild(haveItemDom);
+    const trade = {
+      haveItem: values.haveItem,
+      haveColor: values.haveColor,
+      haveCert: values.haveCert,
+      wantItem: values.wantItem,
+      wantColor: values.wantColor,
+      wantCert: values.wantCert
+    }
 
-    const haveColorDom = document.createElement("div");
-    const haveColorText = document.createTextNode(data.haveColor);
-    haveColorDom.appendChild(haveColorText);
-    document.getElementById("haveItem").appendChild(haveColorDom);
-   
-    const haveCertDom = document.createElement("div");
-    const haveCertText = document.createTextNode(data.haveCert);
-    haveCertDom.appendChild(haveCertText);
-    document.getElementById("haveCert").appendChild(haveCertDom);
-
-    const wantItemDom = document.createElement("div");
-    const wantItemText = document.createTextNode(data.wantItem);
-    wantItemDom.appendChild(wantItemText);
-    document.getElementById("wantItem").appendChild(wantItemDom);
-    
-    const wantColorDom = document.createElement("div");
-    const wantColorText = document.createTextNode(data.wantColor);
-   wantColorDom.appendChild(wantColorText);
-    document.getElementById("wantColor").appendChild(wantColorDom);
-
-    const wantCertDom = document.createElement("div");
-    const wantCertText = document.createTextNode(data.wantCert);
-    wantCertDom.appendChild(wantCertText);
-    document.getElementById("wantCert").appendChild(wantCertDom);
+    axios.post(root + "/trades/add", trade)
+      .then(res => console.log(res.data))
   },
   displayName: "BasicForm" // helps with React DevTools
 });
@@ -1023,6 +1006,8 @@ const MyForm = props => {
           onBlur={handleBlur}
           style={{ display: "block" }}
         >
+
+
           <option value="" label="Select an item" />
           <optgroup label="Misc."></optgroup>
           <option value="Champions Crate 1">Champions Crate 1</option>
@@ -1980,31 +1965,7 @@ const MyForm = props => {
           Submit
       </button>
       </form>
-
-      <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-          <h2 class="display-4" id="currentTrades">Current Trades</h2>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">New Trade</h5>
-              <div class="row">
-                <div class="col">
-                  <div id="haveItem"></div>
-                  <div id="haveColor"></div>
-                  <div id="haveCert"></div>
-                </div>
-                <div class="col">
-                <div id="wantItem"></div>
-                <div id="wantColor"></div>
-                <div id="wantCert"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-    
   );
 };
 
