@@ -1,7 +1,7 @@
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-var cheerio = require("cheerio");
+
 
 var PORT = 3000;
 
@@ -18,14 +18,6 @@ app.use(express.static("public"));
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/RocketLeagueTrade";
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
-
-db.Trade.create({ haveItem: "Player's Choice Crate", haveCertification: "none", haveColor: "none", wantItem: "Ferocity Crate", wantCertification: "none", wantColor: "none" })
-  .then(function(dbTrade) {
-    console.log(dbTrade);
-  })
-  .catch(function(err) {
-    console.log(err.message);
-  });
 
 // Routes
 
